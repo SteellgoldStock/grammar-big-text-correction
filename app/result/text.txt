@@ -1,0 +1,311 @@
+Maintenant qu'on a vu les fonctions, tu devrais mieux comprendre les différentes fonctions qu'on a vues jusqu'à maintenant !
+
+Car tu peux créer une infinité de fonctions, mais JavaScript te propose déjà de nombreuses fonctions.
+
+Ce qu'on a déjà vu : 
+
+- `"salut".toUpperCase()` : transforme le texte en majuscule
+- `"salut".toLowerCase()` : transforme le texte en minuscule
+- `Math.abs(-4)` : transforme un nombre en positif
+- `Math.isNaN(NaN)` : vérifie si une variable est `NaN` (not a number)
+
+Et bien d'autres encore !
+
+J'ai envie, dans ce dernier cours sur les fonctions, de découvrir quelques objets qui contiennent des fonctions.
+
+## Date
+
+`Date` est un module en JavaScript qui permet d'interagir avec des... dates 🎉
+
+Pour l'utiliser, il faut créer une nouvelle instance de `Date` :
+
+```js
+// Par défaut, ce sera la date du jour
+const date = new Date();
+```
+
+<Caption emoji="🎲">
+La syntaxe `new Date()` est une syntaxe qui permet de créer une nouvelle instance d'un objet. On verra ça plus tard lorsqu'on parlera de la programmation orientée objet.
+
+Mais ce qu'il faut comprendre c'est que `new Date()` est une fonction qui va créer un nouvel objet `Date`.
+
+Cet objet Date va contenir des informations sur la date actuelle et nous permettre d'intéragir avec.
+</Caption>
+
+En JavaScript, les dates sont stockées sous forme de timestamp. C'est à dire que la date est stockée sous forme de nombre de millisecondes depuis le 1er janvier 1970.
+
+1 minute = 60 secondes = 60 000 millisecondes
+
+<Question id="3.functions-5.func-built-in.1" correct="312 000 millisecondes">
+Quelle sera la timestamp pour la date de **1er janvier 1970 à 00h05 et 12 secondes ?
+</Question>
+
+C'est pas très utile de savoir ça, mais c'est important de le savoir pour comprendre comment fonctionne les dates en JavaScript.
+
+Avec cette class `Date`, on va pouvoir manipuler des dates.
+
+<Playground
+template="test-ts"
+activeFile="current.test.ts"
+size="medium"
+mode="both"
+files={{
+"add.test.ts": {
+code: ``,
+      hidden: true
+    },
+    "current.test.ts": `const date = new Date("2021-09-15");
+
+// 🦁 Utilise date.getTime();
+const timestamp = 1;
+// 🦁 Utilise date.toLocaleString();
+const toDateString = ""
+
+/* - Ne pas modifier - */
+describe("date", () => {
+  test("timestamp", () => {
+    expect(timestamp).toBe(1631664000000);
+  });
+  test("date string", () => {
+    expect(toDateString).toBe("9/15/2021, 7:00:00 AM")
+  });
+});`
+}}
+/>
+
+Comme tu le vois, on vient transformer notre objet Date en timestamp ou en string via **des méthodes**.
+
+Les **méthodes** sont un autre type de fonctions. Mais au lieu d'être une fonction qui est indépendante, la méthode est une fonction qui est liée à un objet (ici la `Date`)
+
+### Exercice
+
+Avec ces dates, il est possible de faire des calculs !
+
+En utilisant les timestamps, tu peux calculer le temps entre deux dates. C'est la mission que tu dois réaliser dans la function `getElapsedTimeInSeconds`.
+
+Comme le nom l'indique, tu dois retourner le temps écoulé entre deux dates en secondes et pas en millisecondes !
+
+⚠️ Il faut arrondir le résultat à l'entier le plus proche.
+
+
+<Playground
+template="test-ts"
+activeFile="current.test.ts"
+size="medium"
+mode="both"
+files={{
+"add.test.ts": {
+code: ``,
+      hidden: true
+    },
+    "current.test.ts": `const getElapsedTimeInSeconds = (date1, date2) => {
+  // 🦁 Récupère le timestamp de chaque date
+
+  // 🦁 Calcule le temps écoulé entre les deux dates
+
+  // 🦁 Retourne le temps écoulé en secondes
+
+  return 0;
+};
+
+/* - Ne pas modifier - */
+describe("getElapsedTimeInSeconds", () => {
+  test("time 1", () => {
+    const date1 = new Date("2021-10-15");
+    const date2 = new Date("2021-09-15");
+    const elapsedTime = getElapsedTimeInSeconds(date1, date2);
+
+    expect(elapsedTime).toBe(2592000);
+  });
+
+  test("time 2", () => {
+    const date1 = new Date("2019-10-15");
+    const date2 = new Date("2019-10-20");
+    const elapsedTime = getElapsedTimeInSeconds(date1, date2);
+
+    expect(elapsedTime).toBe(432000);
+  });
+
+  test("time 3", () => {
+    const date1 = new Date("2000-1-10");
+    const date2 = new Date("2000-1-11");
+    const elapsedTime = getElapsedTimeInSeconds(date1, date2);
+
+    expect(elapsedTime).toBe(86400);
+  });
+});`
+}}
+/>
+
+<ShowMore label="Tips 1">
+Pour récupérer le timestamp d'une date, tu peux utiliser la méthode `getTime()`.
+</ShowMore>
+
+<ShowMore label="Tips 2">
+Pour calculer le temps entre 2 dates, tu peux soustraire les deux timestamps.
+
+Ensuite, tu pourras utiliser `Math.abs` pour retourner un positif, peu importe l'ordre des deux dates.
+</ShowMore>
+
+<Spoiler title="Solution">
+
+<video id="mo3-5.getElapsedTime-solution">
+
+```js
+const getElapsedTimeInSeconds = (date1, date2) => {
+  const date1Time = date1.getTime();
+  const date2Time = date2.getTime();
+
+  const elapsedTime = date2Time - date1Time;
+
+  return Math.round(Math.abs(elapsedTime) / 1000);
+};
+```
+
+</Spoiler>
+
+Il y a évidemment pleins d'autres méthodes sur les dates, mais tu les découvriras seul ou durant les prochains exercices.
+
+## JSON
+
+`JSON` est un module en JavaScript qui permet d'intéragir avec des... JSON 🎉
+
+Mais cette fois, pas besoin de créer une nouvelle instance. On peut directement utiliser les fonctions sur l'objet `JSON`.
+
+Le JSON est un format de données très utilisé pour échanger des données entre des applications.
+
+* [Le format JSON](https://www.youtube.com/watch?v=MhzKr1ZA-HA) : vidéo récente de Grafikart
+
+En JavaScript il est important de pouvoir transformer un JSON en objet et inversement.
+
+Pour ça, on va utiliser les méthodes `JSON.parse` et `JSON.stringify`.
+
+`JSON.parse` permet de transformer une **string** en un objet valide.
+
+`JSON.stringify` permet de transformer un objet en une **string**.
+
+<Caption emoji="🛸">
+On a pas encore vu les **objets** ensemble, mais c'est un type de données qui permet de stocker des informations sous forme de clé/valeur.
+
+```js
+const obj = {
+  name: "Lionel",
+  age: 25,
+  isStudent: true,
+  hobbies: ["coding", "music", "sport"]
+}
+```
+
+On verra toutes les spécificités des objets dans un prochain chapitre.
+</Caption>
+
+
+
+<Playground
+template="test-ts"
+activeFile="current.test.ts"
+size="medium"
+mode="both"
+files={{
+"add.test.ts": {
+code: ``,
+      hidden: true
+    },
+    "current.test.ts": `const obj = { name: "BeginJavaScript" }
+
+// 🦁 Utilise JSON.stringify pour transformer l'objet en string
+const toJson = ""
+
+console.log(toJson)
+
+/* - Ne pas modifier - */
+describe("JSON", () => {
+  test("toJson", () => {
+    expect(toJson).toBe('{"name":"BeginJavaScript"}')
+  })
+});
+`
+}}
+/>
+
+Normalement, tu verras l'objet sous forme de string dans la console. Pour t'amuser, tu peux ajouter 2 paramètres `JSON.stringify(obj, null, 2)` et regarde ce que ça donne !
+
+<Spoiler title="Résultat">
+
+Avant, tu aurais du voir ceci dans la console : 
+
+```txt
+{"name":"BeginJavaScript"}
+```
+
+Mais quand tu passes le paramètre `null` suivi de 2, tu viens indiquer à `JSON.stringify` que tu veux afficher l'objet avec une indentation de 2 espaces.
+
+```txt
+{
+  "name": "BeginJavaScript"
+}
+```
+
+Un peu plus joli ? 
+
+Retrouve toutes les informatiosn sur les JSON dans [la documentation MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify) !
+
+</Spoiler>
+
+`JSON.parse` fait la même chose mais dans l'autre sens. Il transforme une string en objet.
+
+<Caption emoji="⚠️">
+
+`JSON.stringify` et `JSON.parse` ne fonctionnent pas que sur des objets. Tu peux aussi transformer des [tableaux](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array), des string ou même des number !
+
+</Caption>
+
+## Conclusion
+
+Les fonctions sont au coeur de JavaScript, tu intéragis constamment avec des fonctions, que ce soit celles que tu as créés ou directement les fonctions proposées dans JavaScript.
+
+Dans les prochains module, on verra comment manipuler des tableaux avec justement des fonctions et des boucles.
+
+## Quiz
+
+<Quiz 
+  id="3.functions-5.func-built-in.2"
+  correctAnswerIndex={2} 
+  correctAnswer="La méthode est toujours liée à un objet alors que la fonction est indépendante !"
+  answers={[
+    "Aucune",
+    "La méthode n'est liée à rien alors que la fonction est liée à un objet",
+    "La méthode est liée à un objet alors qu'une fonction est indépendante",
+    "Tout est indépendant"
+  ]}>
+
+Quelle est la différence entre une méthode et une fonctoin ?
+
+</Quiz>
+
+<Question id="3.functions-5.func-built-in.3" correct=".getTime()">
+Quel est la méthode qui permet de récupérer le timestamp d'une date ?
+</Question>
+
+<Question id="3.functions-5.func-built-in.4" correct="Il permet de formatter le JSON avec des tabs.">
+Que fait le troisième paramètre de `JSON.stringify` ?
+</Question>
+
+<Question id="3.functions-5.func-built-in.5" correct="new Date()">
+Comment créer un objet `Date` avec la date du jour ?
+</Question>
+
+<Quiz 
+  id="3.functions-5.func-built-in.6"
+  correctAnswerIndex={[1, 3]} 
+  correctAnswer="La méthode parse vient 'parser' la string, que ce soit un number, une string, un boolean ou autre, il va le transformer dans sa valeur d'origine. C'est pour ça que les deux réponses sont correctes. Il transforme une string en... n'importe quoi !"
+  answers={[
+    "Il permet de transformer un objet en string",
+    "Il permet de transformer une string en number",
+    "Il permet de transforemr un objet en number",
+    "Il permet de transforemr une string en objet"
+  ]}>
+
+A quoi sert `JSON.parse()` ?
+
+</Quiz>
