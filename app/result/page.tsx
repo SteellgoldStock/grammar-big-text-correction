@@ -26,6 +26,7 @@ export default async function Page({
     model: 'gpt-3.5-turbo-16k',
     stream: true,
     max_tokens: 10000,
+    temperature: 0,
     messages: [
       {
         role: 'user',
@@ -38,7 +39,7 @@ Mais tu comprends que, comme on parle de code, il y a beaucoup d'anglicisme que 
 GOAL:  
 Tu dois me retourner le texte en corrigeant uniquement l'orthographe et la grammaire. Tu ne dois changer aucuns mots, aucun ordre et garder les anglicismes.
 
-CRITERES:
+CRITÈRES:
 - Tu ne changes pas le sens du cours
 - Tu corriges que ce qui est écrit en Français
 - Tu me retournes le même document avec les balises MDX
@@ -46,7 +47,7 @@ CRITERES:
 - Tu ne traduis aucun mot
 
 RESPONSE FORMAT:
-Tu me renvoies le texte corriger 1 fois. Tu n'ajoutes aucun commentaire et aucune information mise à part le texte corriger.
+Tu me renvoies le texte corriger. Il ne dois plus y avoir de faute.. Tu n'ajoutes aucun commentaire et aucune information mise à part le texte corriger.
 
 TEXT:
 """
