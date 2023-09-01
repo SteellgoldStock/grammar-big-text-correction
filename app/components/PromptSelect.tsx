@@ -10,7 +10,10 @@ import { useLocalStorage } from 'usehooks-ts';
 import { PromptKey, PromptKeySchema, promptKeys } from '../ai/prompt-list';
 
 export function PromptSelect() {
-  const [value, setValue] = useLocalStorage<PromptKey>('prompt', promptKeys[0]);
+  const [value, setValue] = useLocalStorage<PromptKey>(
+    'prompt-select',
+    promptKeys[0]
+  );
   return (
     <Select
       value={value}

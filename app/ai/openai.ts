@@ -4,6 +4,7 @@ import { PromptKeySchema, promptMap } from './prompt-list';
 const getLocalStorageItem = (key: string) => {
   const item = localStorage.getItem(key);
 
+  console.log({ item, key });
   try {
     return JSON.parse(item || '');
   } catch (error) {
@@ -13,7 +14,7 @@ const getLocalStorageItem = (key: string) => {
 
 export const getCorrection = async (prompt: string) => {
   const apiKey = getLocalStorageItem('openai-key');
-  const type = PromptKeySchema.parse(getLocalStorageItem('type'));
+  const type = PromptKeySchema.parse(getLocalStorageItem('prompt-select'));
 
   if (!apiKey) {
     throw new Error('No OpenAI API key found');

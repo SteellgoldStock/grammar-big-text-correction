@@ -3,6 +3,7 @@
 // app/page.tsx
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { getCorrection } from './ai/openai';
@@ -30,6 +31,13 @@ const getEmoji = (started: boolean, isOk: boolean) => {
   return '🤔';
 };
 
+type Progress = {
+  part: number;
+  isOk: boolean;
+  length: number;
+  started: boolean;
+};
+
 export default function Page({
   searchParams,
 }: {
@@ -37,14 +45,7 @@ export default function Page({
 }) {
   const [original, setOriginal] = useState('');
   const [finale, setFinale] = useState('');
-  const [progress, setProgress] = useState<
-    {
-      part: number;
-      isOk: boolean;
-      length: number;
-      started: boolean;
-    }[]
-  >([]);
+  const [progress, setProgress] = useState<Progress[]>([]);
 
   const handlePrompt = async (prompt: string) => {
     const MAX_CHARACTERS = 3000;
@@ -112,8 +113,28 @@ export default function Page({
       <CopyButton text={finale} />
       {original && finale && <DiffViewer inputA={original} inputB={finale} />}
 
+      <div className="flex-1" />
+      {progress && (
+        <div className="flex my-2 gap-2">
+          {progress.map((part) => (
+            <div
+              key={part.part}
+              className={cn(
+                'flex items-center gap-1 bg-gray-200 px-2 py-1 rounded',
+                {
+                  'bg-green-200': part.isOk,
+                  'bg-yellow-200': part.started && !part.isOk,
+                }
+              )}
+            >
+              <span>{part.part}</span>
+              <span>{getEmoji(part.started, part.isOk)}</span>
+            </div>
+          ))}
+        </div>
+      )}
       <form
-        className="mt-auto"
+        className=""
         onSubmit={(e) => {
           e.preventDefault();
           const formData = new FormData(e.target as HTMLFormElement);
@@ -128,16 +149,6 @@ export default function Page({
           <PromptSelect />
         </div>
       </form>
-      {progress && (
-        <div>
-          {progress.map((part) => (
-            <div key={part.part}>
-              <span>{part.part}</span>
-              <span>{getEmoji(part.started, part.isOk)}</span>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
