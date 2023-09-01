@@ -7,7 +7,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useLocalStorage } from 'usehooks-ts';
-import { PromptKey, PromptKeySchema, promptKeys } from './prompt-list';
+import { PromptKey, PromptKeySchema, promptKeys } from '../ai/prompt-list';
 
 export function PromptSelect() {
   const [value, setValue] = useLocalStorage<PromptKey>('prompt', promptKeys[0]);

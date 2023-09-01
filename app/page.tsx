@@ -5,11 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { OpenAIKeyModal } from './OpenAIKeyModal';
-import { PromptSelect } from './PromptSelect';
-import { DiffViewer } from './diff-viewer';
-import { getCorrection } from './openai';
-import { CopyButton } from './result/CopyButton';
+import { getCorrection } from './ai/openai';
+import { CopyButton } from './components/CopyButton';
+import { DiffViewer } from './components/DiffViewer';
+import { OpenAIKeyModal } from './components/OpenAIKeyModal';
+import { PromptSelect } from './components/PromptSelect';
 
 const fetchCorrection = async (prompt: string) => {
   return fetch('/ai', {
@@ -109,20 +109,9 @@ export default function Page({
 
   return (
     <div className="pt-4 container h-full flex flex-col">
-      <CopyButton />
+      <CopyButton text={finale} />
       {original && finale && <DiffViewer inputA={original} inputB={finale} />}
-      <DiffViewer
-        inputA={`## Titre
-      
-J'aime **manggge des noulles.**`}
-        inputB={`## Titre
 
-J'aime **manger des nouilles**.`}
-      />
-
-      <p id="result" className="hidden">
-        {finale}
-      </p>
       <form
         className="mt-auto"
         onSubmit={(e) => {
