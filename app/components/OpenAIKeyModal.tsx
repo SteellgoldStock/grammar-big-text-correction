@@ -33,10 +33,15 @@ export function OpenAIKeyModal() {
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
+            <Label htmlFor="api-key" className="text-right">
               OpenAI Key
             </Label>
-            <Input defaultValue={key} ref={ref} id="name" className="col-span-3" />
+            <Input
+              defaultValue={key}
+              ref={ref}
+              id="api-key"
+              className="col-span-3"
+            />
           </div>
         </div>
         <DialogFooter>
