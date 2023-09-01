@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { OpenAIKeyModal } from './OpenAIKeyModal';
+import { PromptSelect } from './PromptSelect';
 import { DiffViewer } from './diff-viewer';
 import { getCorrection } from './openai';
 import { CopyButton } from './result/CopyButton';
@@ -107,9 +108,23 @@ export default function Page({
   };
 
   return (
-    <div className="mt-4 container">
-      <OpenAIKeyModal />
+    <div className="pt-4 container h-full flex flex-col">
+      <CopyButton />
+      {original && finale && <DiffViewer inputA={original} inputB={finale} />}
+      <DiffViewer
+        inputA={`## Titre
+      
+J'aime **manggge des noulles.**`}
+        inputB={`## Titre
+
+J'aime **manger des nouilles**.`}
+      />
+
+      <p id="result" className="hidden">
+        {finale}
+      </p>
       <form
+        className="mt-auto"
         onSubmit={(e) => {
           e.preventDefault();
           const formData = new FormData(e.target as HTMLFormElement);
@@ -118,7 +133,11 @@ export default function Page({
         }}
       >
         <Textarea name="prompt" defaultValue={searchParams['prompt']} />
-        <Button type="submit">Submit</Button>
+        <div className="flex gap-2 my-4">
+          <Button type="submit">Submit</Button>
+          <OpenAIKeyModal />
+          <PromptSelect />
+        </div>
       </form>
       {progress && (
         <div>
@@ -130,10 +149,6 @@ export default function Page({
           ))}
         </div>
       )}
-      <CopyButton />
-      {original && finale && <DiffViewer inputA={original} inputB={finale} />}
-
-      <p id="result">{finale}</p>
     </div>
   );
 }

@@ -20,7 +20,9 @@ export function OpenAIKeyModal() {
   return (
     <Dialog open={!key ? true : undefined}>
       <DialogTrigger asChild>
-        <Button variant="outline">API Key</Button>
+        <Button type="button" variant="outline">
+          API Key
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
