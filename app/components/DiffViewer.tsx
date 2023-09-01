@@ -17,9 +17,7 @@ export const DiffViewer: React.FC<DiffProps> = ({ inputA, inputB }) => {
         return part.value;
       }
 
-      const colorClass = part.added
-        ? 'text-green-500'
-        : 'text-red-500 line-througha';
+      const colorClass = part.added ? 'text-green-500' : 'text-red-500 line-through';
 
       return `<span class="${colorClass}">${part.value}</span>`;
     });
