@@ -1,25 +1,16 @@
-// Optional, but recommended: run on the edge runtime.
-
-import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-// See https://vercel.com/docs/concepts/functions/edge-functions
-export const runtime = 'edge';
+export const getCorrection = async (prompt: string) => {
+  const apiKey = localStorage.getItem('openai-key');
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY!,
-});
-
-export const POST = async (req: Request) => {
-  const body = await req.json();
-
-  const prompt = body.prompt as string;
-
-  if (!prompt) {
-    return NextResponse.json({
-      error: 'No prompt provided',
-    });
+  if (!apiKey) {
+    throw new Error('No OpenAI API key found');
   }
+
+  const openai = new OpenAI({
+    apiKey: String(apiKey).replace(/"/g, ''),
+    dangerouslyAllowBrowser: true,
+  });
 
   // Request the OpenAI API for the response based on the prompt
   const response = await openai.chat.completions.create({
@@ -27,6 +18,7 @@ export const POST = async (req: Request) => {
     stream: false,
     max_tokens: 1000,
     temperature: 0,
+
     messages: [
       {
         role: 'user',
@@ -57,15 +49,13 @@ ${prompt}`,
     ],
   });
 
-  const json = response.choices[0].message.content;
-
-  if (!json) {
-    return NextResponse.json({
-      error: 'No response from OpenAI',
-    });
+  try {
+    const json = response.choices[0].message.content;
+    if (!json) {
+      throw new Error('No response from OpenAI');
+    }
+    return json;
+  } catch (error) {
+    throw new Error('No response from OpenAI');
   }
-
-  return NextResponse.json({
-    text: json,
-  });
 };

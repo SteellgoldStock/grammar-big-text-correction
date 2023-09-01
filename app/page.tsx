@@ -4,6 +4,10 @@
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useState } from 'react';
+import { toast } from 'sonner';
+import { OpenAIKeyModal } from './OpenAIKeyModal';
+import { DiffViewer } from './diff-viewer';
+import { getCorrection } from './openai';
 import { CopyButton } from './result/CopyButton';
 
 const fetchCorrection = async (prompt: string) => {
@@ -30,6 +34,7 @@ export default function Page({
 }: {
   searchParams: Record<string, string>;
 }) {
+  const [original, setOriginal] = useState('');
   const [finale, setFinale] = useState('');
   const [progress, setProgress] = useState<
     {
@@ -42,8 +47,7 @@ export default function Page({
 
   const handlePrompt = async (prompt: string) => {
     const MAX_CHARACTERS = 3000;
-    // i want you to break the prompt in a array of string of maximum MAX_CHARACTERS characters
-    // you need to break only at the end of a sentence
+    setOriginal(prompt);
 
     const splitText = [];
     const splitPrompt = prompt.split('\n\n');
@@ -76,17 +80,16 @@ export default function Page({
           newProgress[index].started = true;
           return newProgress;
         });
-        const result = await fetchCorrection(part);
+        const result = await getCorrection(part);
         setProgress((prev) => {
           const newProgress = [...prev];
           newProgress[index].isOk = true;
           return newProgress;
         });
-        return result as { text: string };
-      } catch (e) {
-        return {
-          text: '[[invalid response]]',
-        };
+        return result;
+      } catch (e: any) {
+        toast.error(e.message);
+        return '[[invalid response]]';
       }
     });
 
@@ -95,7 +98,7 @@ export default function Page({
     console.log({ results });
 
     const finale = results.reduce((acc, current) => {
-      return acc + current.text + '\n\n';
+      return acc + current + '\n\n';
     }, '');
 
     setFinale(finale);
@@ -105,6 +108,7 @@ export default function Page({
 
   return (
     <div className="mt-4 container">
+      <OpenAIKeyModal />
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -127,6 +131,8 @@ export default function Page({
         </div>
       )}
       <CopyButton />
+      {original && finale && <DiffViewer inputA={original} inputB={finale} />}
+
       <p id="result">{finale}</p>
     </div>
   );
