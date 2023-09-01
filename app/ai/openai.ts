@@ -27,8 +27,6 @@ export const getCorrection = async (prompt: string) => {
 
   const basePrompt = promptMap[type];
 
-  console.log({ basePrompt, prompt });
-
   if (!basePrompt) {
     throw new Error('No prompt found');
   }
