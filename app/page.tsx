@@ -111,9 +111,10 @@ export default function Page({
   return (
     <div className="pt-4 container h-full flex flex-col">
       <CopyButton text={finale} />
-      {original && finale && <DiffViewer inputA={original} inputB={finale} />}
+      <div className="flex-1 overflow-auto">
+        {original && finale && <DiffViewer inputA={original} inputB={finale} />}
+      </div>
 
-      <div className="flex-1" />
       {progress && (
         <div className="flex my-2 gap-2">
           {progress.map((part) => (

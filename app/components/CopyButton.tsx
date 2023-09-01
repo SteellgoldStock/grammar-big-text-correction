@@ -10,6 +10,9 @@ export const CopyButton = ({ text }: { text?: string }) => {
     if (text) {
       navigator.clipboard.writeText(text);
       setCopied(true);
+      setTimeout(() => {
+        setCopied(false);
+      }, 3000);
     }
   };
 

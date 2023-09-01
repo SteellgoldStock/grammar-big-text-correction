@@ -1,4 +1,4 @@
-import { diffChars } from 'diff';
+import { diffWords } from 'diff';
 import React, { useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
@@ -10,14 +10,16 @@ type DiffProps = {
 
 export const DiffViewer: React.FC<DiffProps> = ({ inputA, inputB }) => {
   const diff = useMemo(() => {
-    const d = diffChars(inputA, inputB);
+    const d = diffWords(inputA, inputB);
 
     const textWithSpan = d.map((part) => {
       if (!part.added && !part.removed) {
         return part.value;
       }
 
-      const colorClass = part.added ? 'text-green-500' : 'text-red-500';
+      const colorClass = part.added
+        ? 'text-green-500'
+        : 'text-red-500 line-througha';
 
       return `<span class="${colorClass}">${part.value}</span>`;
     });
