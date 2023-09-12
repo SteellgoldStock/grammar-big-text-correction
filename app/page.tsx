@@ -4,13 +4,13 @@
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
-import { toast } from 'sonner';
-import { getCorrection } from './ai/openai';
 import { CopyButton } from './components/CopyButton';
 import { DiffViewer } from './components/DiffViewer';
 import { OpenAIKeyModal } from './components/OpenAIKeyModal';
-import { PromptSelect } from './components/PromptSelect';
+import { PromptModelSelect } from './components/PromptModelSelect';
+import { PromptTypeSelect } from './components/PromptTypeSelect';
+import { HistoryModal } from './components/histories/HistoryModal';
+import { ProgressStatus, useCorrectionStore } from './store/CorrectionStore';
 
 const fetchCorrection = async (prompt: string) => {
   return fetch('/ai', {
@@ -21,14 +21,15 @@ const fetchCorrection = async (prompt: string) => {
   }).then((res) => res.json());
 };
 
-const getEmoji = (started: boolean, isOk: boolean) => {
-  if (!started) {
-    return '⏳';
+const getEmoji = (status: ProgressStatus) => {
+  switch (status) {
+    case 'finished':
+      return '✅';
+    case 'started':
+      return '🕐';
+    default:
+      return '⌛️';
   }
-  if (isOk) {
-    return '✅';
-  }
-  return '🤔';
 };
 
 type Progress = {
@@ -43,76 +44,12 @@ export default function Page({
 }: {
   searchParams: Record<string, string>;
 }) {
-  const [original, setOriginal] = useState('');
-  const [finale, setFinale] = useState('');
-  const [progress, setProgress] = useState<Progress[]>([]);
-
-  const handlePrompt = async (prompt: string) => {
-    const MAX_CHARACTERS = 3000;
-    setOriginal(prompt);
-
-    const splitText = [];
-    const splitPrompt = prompt.split('\n\n');
-    let currentString = '';
-    for (let i = 0; i < splitPrompt.length; i++) {
-      console.log(i, currentString.length);
-      const currentSentence = splitPrompt[i];
-      if (currentString.length + currentSentence.length > MAX_CHARACTERS) {
-        splitText.push(currentString);
-        currentString = '';
-      }
-      currentString += currentSentence + '\n\n';
-    }
-    splitText.push(currentString);
-
-    setProgress(
-      splitText.map((part, i) => ({
-        part: i,
-        length: part.length,
-        isOk: false,
-        started: false,
-      }))
-    );
-
-    const promises = splitText.map(async (part, index) => {
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 5000 * index));
-        setProgress((prev) => {
-          const newProgress = [...prev];
-          newProgress[index].started = true;
-          return newProgress;
-        });
-        const result = await getCorrection(part);
-        setProgress((prev) => {
-          const newProgress = [...prev];
-          newProgress[index].isOk = true;
-          return newProgress;
-        });
-        return result;
-      } catch (e: any) {
-        toast.error(e.message);
-        return '[[invalid response]]';
-      }
-    });
-
-    const results = await Promise.all(promises);
-
-    console.log({ results });
-
-    const finale = results.reduce((acc, current) => {
-      return acc + current + '\n\n';
-    }, '');
-
-    setFinale(finale);
-
-    setProgress([]);
-  };
-
+  const { original, final, progress, start, clear } = useCorrectionStore();
   return (
     <div className="pt-4 container h-full flex flex-col">
-      <CopyButton text={finale} />
+      <CopyButton text={final} />
       <div className="flex-1 overflow-auto">
-        {original && finale && <DiffViewer inputA={original} inputB={finale} />}
+        {original && final && <DiffViewer inputA={original} inputB={final} />}
       </div>
 
       {progress && (
@@ -123,33 +60,38 @@ export default function Page({
               className={cn(
                 'flex items-center gap-1 bg-gray-200 px-2 py-1 rounded',
                 {
-                  'bg-green-200': part.isOk,
-                  'bg-yellow-200': part.started && !part.isOk,
+                  'bg-green-200': part.status === 'finished',
+                  'bg-yellow-200': part.status === 'started',
                 }
               )}
             >
               <span>{part.part}</span>
-              <span>{getEmoji(part.started, part.isOk)}</span>
+              <span>{getEmoji(part.status)}</span>
             </div>
           ))}
         </div>
       )}
-      <form
-        className=""
-        onSubmit={(e) => {
-          e.preventDefault();
-          const formData = new FormData(e.target as HTMLFormElement);
-          const prompt = formData.get('prompt') as string;
-          handlePrompt(prompt);
-        }}
-      >
-        <Textarea name="prompt" defaultValue={searchParams['prompt']} />
-        <div className="flex gap-2 my-4">
+      <fieldset disabled={progress.length > 0} className="flex flex-col gap-2 mb-2">
+        <form
+          className="flex gap-2"
+          onSubmit={(e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target as HTMLFormElement);
+            const prompt = formData.get('prompt') as string;
+            start(prompt);
+          }}
+        >
+          <Textarea name="prompt" defaultValue={searchParams['prompt']} />
           <Button type="submit">Submit</Button>
+        </form>
+        <div className="flex gap-2">
           <OpenAIKeyModal />
-          <PromptSelect />
+          <PromptTypeSelect />
+          <PromptModelSelect />
+          <Button onClick={clear}>Clear</Button>
+          <HistoryModal />
         </div>
-      </form>
+      </fieldset>
     </div>
   );
 }

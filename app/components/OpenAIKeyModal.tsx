@@ -12,10 +12,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useRef } from 'react';
 import { toast } from 'sonner';
-import { useLocalStorage } from 'usehooks-ts';
+import { useConfigStore } from '../store/ConfigStore';
 
 export function OpenAIKeyModal() {
-  const [key, setKey] = useLocalStorage('openai-key', '');
+  const key = useConfigStore((state) => state.apiKey);
+  const setKey = useConfigStore((state) => state.setApiKey);
+
   const ref = useRef<HTMLInputElement>(null);
   return (
     <Dialog open={!key ? true : undefined}>

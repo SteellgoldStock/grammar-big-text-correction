@@ -6,24 +6,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useLocalStorage } from 'usehooks-ts';
-import { PromptKey, PromptKeySchema, promptKeys } from '../ai/prompt-list';
+import { PromptKeySchema, promptKeys } from '../ai/prompt-list';
+import { useConfigStore } from '../store/ConfigStore';
 
-export function PromptSelect() {
-  const [value, setValue] = useLocalStorage<PromptKey>(
-    'prompt-select',
-    promptKeys[0]
-  );
+export function PromptTypeSelect() {
+  const prompt = useConfigStore((state) => state.promptType);
+  const setPrompt = useConfigStore((state) => state.setPromptType);
   return (
     <Select
-      value={value}
+      value={prompt}
       onValueChange={(v) => {
         const parsedValue = PromptKeySchema.parse(v);
-        setValue(parsedValue);
+        setPrompt(parsedValue);
       }}
     >
-      <SelectTrigger type="button" className="w-[180px]">
-        <SelectValue placeholder="Select a fruit" />
+      <SelectTrigger type="button" className="w-[120px]">
+        <SelectValue placeholder="Model" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>

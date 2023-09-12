@@ -1,20 +1,9 @@
 import OpenAI from 'openai';
-import { PromptKeySchema, promptMap } from './prompt-list';
-
-const getLocalStorageItem = (key: string) => {
-  const item = localStorage.getItem(key);
-
-  console.log({ item, key });
-  try {
-    return JSON.parse(item || '');
-  } catch (error) {
-    return '';
-  }
-};
+import { useConfigStore } from '../store/ConfigStore';
+import { promptMap } from './prompt-list';
 
 export const getCorrection = async (prompt: string) => {
-  const apiKey = getLocalStorageItem('openai-key');
-  const type = PromptKeySchema.parse(getLocalStorageItem('prompt-select'));
+  const { apiKey, promptType, promptModel } = useConfigStore.getState();
 
   if (!apiKey) {
     throw new Error('No OpenAI API key found');
@@ -25,7 +14,7 @@ export const getCorrection = async (prompt: string) => {
     dangerouslyAllowBrowser: true,
   });
 
-  const basePrompt = promptMap[type];
+  const basePrompt = promptMap[promptType];
 
   if (!basePrompt) {
     throw new Error('No prompt found');
@@ -33,7 +22,7 @@ export const getCorrection = async (prompt: string) => {
 
   // Request the OpenAI API for the response based on the prompt
   const response = await openai.chat.completions.create({
-    model: 'gpt-4',
+    model: promptModel,
     stream: false,
     max_tokens: 1000,
     temperature: 0,
