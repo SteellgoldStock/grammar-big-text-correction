@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { CopyButton } from './components/CopyButton';
 import { DiffViewer } from './components/DiffViewer';
+import { MaxCharactersInput } from './components/MaxCharactersInput';
 import { OpenAIKeyModal } from './components/OpenAIKeyModal';
 import { PromptModelSelect } from './components/PromptModelSelect';
 import { PromptTypeSelect } from './components/PromptTypeSelect';
@@ -90,6 +91,7 @@ export default function Page({
           <PromptModelSelect />
           <Button onClick={clear}>Clear</Button>
           <HistoryModal />
+          <MaxCharactersInput />
         </div>
       </fieldset>
     </div>

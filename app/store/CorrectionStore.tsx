@@ -2,6 +2,7 @@ import { toast } from 'sonner';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { getCorrection } from '../ai/openai';
+import { useConfigStore } from './ConfigStore';
 import { useHistoryStore } from './HistoryStore';
 import { textToSmallParts } from './correction-helper';
 
@@ -36,13 +37,13 @@ export const useCorrectionStore = create(
         });
       },
       start: async (newOriginal) => {
-        console.log('START');
         const original = newOriginal.trim();
+        const config = useConfigStore.getState();
         set({
           original,
           final: '',
         });
-        const parts = textToSmallParts(original, MAX_CHARACTERS);
+        const parts = textToSmallParts(original, config.maxCharacters);
 
         set({
           progress: parts.map((part, i) => ({

@@ -7,9 +7,11 @@ type Store = {
   apiKey: string;
   promptType: PromptKey;
   promptModel: PromptModel;
+  maxCharacters: number;
   setApiKey: (apiKey: string) => void;
   setPromptType: (promptType: PromptKey) => void;
   setPromptModel: (promptModel: PromptModel) => void;
+  setMaxCharacters: (maxCharacters: number) => void;
 };
 
 export const useConfigStore = create(
@@ -21,6 +23,8 @@ export const useConfigStore = create(
       setPromptType: (promptType: PromptKey) => set({ promptType }),
       promptModel: 'gpt-4',
       setPromptModel: (promptModel: PromptModel) => set({ promptModel }),
+      maxCharacters: 3000,
+      setMaxCharacters: (maxCharacters: number) => set({ maxCharacters }),
     }),
     {
       name: 'correction-config',
