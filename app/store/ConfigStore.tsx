@@ -18,7 +18,7 @@ export const useConfigStore = create(
   persist<Store>(
     (set, get) => ({
       apiKey: '',
-      promptType: 'english',
+      promptType: 'English',
       setApiKey: (apiKey: string) => set({ apiKey }),
       setPromptType: (promptType: PromptKey) => set({ promptType }),
       promptModel: 'gpt-4',

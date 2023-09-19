@@ -28,9 +28,9 @@ export const DiffViewer: React.FC<DiffProps> = ({ inputA, inputB }) => {
   }, [inputA, inputB]);
 
   return (
-    <div id="display" className="prose">
+    <div id="display">
       {/* @ts-ignore */}
-      <ReactMarkdown rehypePlugins={[rehypeRaw]}>{diff}</ReactMarkdown>
+      <ReactMarkdown className='text-[#374151] w-full' rehypePlugins={[rehypeRaw]}>{diff}</ReactMarkdown>
     </div>
   );
 };

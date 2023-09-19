@@ -17,19 +17,23 @@ export const HistoryModal = () => {
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
-        <Button>Open history</Button>
+      <DialogTrigger disabled={histories.length === 0}>
+        <Button variant={"outline"} disabled={histories.length === 0}>History</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>History</DialogTitle>
         </DialogHeader>
         <ul className="flex flex-col gap-2 max-h-96 overflow-auto">
-          {histories.length === 0 ? <p>No histories</p> : null}
+          {histories.length === 0 ? (
+            <p className="text-center">
+              You haven&apos;t corrected any text yet, so you don&apos;t have any history.
+            </p>
+          ) : null}
           {histories.map((history, i) => {
             return (
               <li
-                className="justify-between items-center border flex  border-border select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                className="justify-between items-center border flex border-border select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer"
                 key={i}
                 onClick={() => {
                   setOpen(false);
@@ -39,7 +43,7 @@ export const HistoryModal = () => {
                   });
                 }}
               >
-                <span>{history.original.slice(0, 40)}</span>
+                <span>{history.original.slice(0, 40)}...</span>
                 <div>
                   <Button
                     size="sm"

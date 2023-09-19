@@ -16,5 +16,7 @@ export const CopyButton = ({ text }: { text?: string }) => {
     }
   };
 
-  return <Button onClick={copy}>{copied ? 'Copied!' : 'Copy'}</Button>;
+  return <Button disabled={!text} onClick={copy}>
+      {copied ? 'Copied!' : 'Copy the result'}
+    </Button>;
 };

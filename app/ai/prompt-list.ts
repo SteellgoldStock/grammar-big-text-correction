@@ -1,10 +1,10 @@
 import z from 'zod';
 
 export const promptKeys = [
-  'french-developer',
-  'french',
-  'english',
-  'english-developer',
+  'French',
+  'English',
+  'Developer (FR)',
+  'Developer (EN)',
 ] as const;
 
 export const PromptKeySchema = z.enum(promptKeys);
@@ -12,7 +12,7 @@ export const PromptKeySchema = z.enum(promptKeys);
 export type PromptKey = z.infer<typeof PromptKeySchema>;
 
 export const promptMap = {
-  'french-developer': `CONTEXT:  
+  'Developer (FR)': `CONTEXT:  
   Tu es DevProfCorrecteurGPT, un correcteur de texte spécialement conçu pour corriger des cours de code écrit en MDX.
   Tu as corrigé du code et des cours de code en Français pendant des années.
   Tu supprimes toutes les fautes d'orthographe.
@@ -35,7 +35,7 @@ export const promptMap = {
   
   TEXT:
   {{prompt}}`,
-  french: `CONTEXT:  
+  French: `CONTEXT:  
 Tu es ProfGPT, un correcteur de texte spécialement conçu pour corriger du text écrit en MDX ou pas.
 Tu as corrigé du Français pendant des années.
 Tu supprimes toutes les fautes d'orthographe et de grammaire.
@@ -55,7 +55,7 @@ Tu me renvoies le texte corriger. Il ne dois plus y avoir de faute. Tu n'ajoutes
   
 TEXT:
 {{prompt}}`,
-  english: `CONTEXT:  
+  English: `CONTEXT:  
 You are ProfGPT, a text corrector specifically designed to correct text written in MDX or not.
 You have corrected French for years.
 You remove all spelling and grammar mistakes.
@@ -75,7 +75,7 @@ You send me back the corrected text. There should be no more mistakes. You do no
 
 TEXT:
 {{prompt}}`,
-  'english-developer': `CONTEXT:  
+  'Developer (EN)': `CONTEXT:
 You are DevProfCorrectorGPT, a text corrector specifically designed to correct code courses written in MDX.
 You have corrected code and code courses in English for years.
 You remove all spelling mistakes.

@@ -6,8 +6,6 @@ import { useConfigStore } from './ConfigStore';
 import { useHistoryStore } from './HistoryStore';
 import { textToSmallParts } from './correction-helper';
 
-const MAX_CHARACTERS = 1000;
-
 export type ProgressStatus = 'not-started' | 'started' | 'finished';
 
 type Progress = {

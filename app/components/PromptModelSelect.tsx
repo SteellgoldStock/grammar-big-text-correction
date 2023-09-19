@@ -20,7 +20,7 @@ export function PromptModelSelect() {
         setPrompt(parsedValue);
       }}
     >
-      <SelectTrigger type="button" className="w-[100px]">
+      <SelectTrigger type="button">
         <SelectValue placeholder="Type" />
       </SelectTrigger>
       <SelectContent>
